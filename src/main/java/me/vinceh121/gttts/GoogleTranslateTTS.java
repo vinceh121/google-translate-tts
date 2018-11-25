@@ -47,7 +47,6 @@ public class GoogleTranslateTTS {
 		HttpsURLConnection con = (HttpsURLConnection) new URL("https://translate.google.com/translate_tts?ie="
 				+ encoding + "&q=" + URLEncoder.encode(text, encoding) + "&tl=" + language + "&client=" + client)
 						.openConnection();
-		System.out.println(con.getURL().toString());
 		con.setRequestMethod("GET");
 		con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; rv:25.0) Gecko/20100101 Firefox/25.0");
 		con.setReadTimeout(5000);
