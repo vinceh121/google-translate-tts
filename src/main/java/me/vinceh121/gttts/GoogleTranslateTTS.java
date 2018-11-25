@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 
@@ -29,16 +31,7 @@ public class GoogleTranslateTTS {
 	}
 
 	public byte[] getData(String text) throws IOException {
-		HttpsURLConnection con = (HttpsURLConnection) new URL("https://translate.google.com/translate_tts?ie="
-				+ encoding + "&q=" + URLEncoder.encode(text, encoding) + "&tl=" + language + "&client=" + client)
-						.openConnection();
-		System.out.println(con.getURL().toString());
-		con.setRequestMethod("GET");
-		con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; rv:25.0) Gecko/20100101 Firefox/25.0");
-		con.setReadTimeout(5000);
-		con.connect();
-
-		InputStream in = (InputStream) con.getInputStream();
+		InputStream in = getStream(text);
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
 		int n;
 		byte[] buffer = new byte[1024];
@@ -48,6 +41,18 @@ public class GoogleTranslateTTS {
 		in.close();
 		out.close();
 		return out.toByteArray();
+	}
+
+	public InputStream getStream(String text) throws IOException {
+		HttpsURLConnection con = (HttpsURLConnection) new URL("https://translate.google.com/translate_tts?ie="
+				+ encoding + "&q=" + URLEncoder.encode(text, encoding) + "&tl=" + language + "&client=" + client)
+						.openConnection();
+		System.out.println(con.getURL().toString());
+		con.setRequestMethod("GET");
+		con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; rv:25.0) Gecko/20100101 Firefox/25.0");
+		con.setReadTimeout(5000);
+		con.connect();
+		return con.getInputStream();
 	}
 
 	public String getEncoding() {
