@@ -15,14 +15,32 @@ import javax.net.ssl.HttpsURLConnection;
 public class GoogleTranslateTTS {
 	private String encoding = "UTF-8", language, client = "tw-ob";
 
+	/**
+	 * 
+	 * @param language The language to use in IETF format (en-US, fr-FR, etc.)
+	 */
 	public GoogleTranslateTTS(String language) {
 		this.language = language;
 	}
 
+	/**
+	 * Save the MP3 audio file for the specified text.
+	 * 
+	 * @param text
+	 * @param file
+	 * @throws IOException
+	 */
 	public void saveToFile(String text, String file) throws IOException {
 		saveToFile(text, new File(file));
 	}
 
+	/**
+	 * Save the MP3 audio file for the specified text.
+	 * 
+	 * @param text
+	 * @param file
+	 * @throws IOException
+	 */
 	public void saveToFile(String text, File file) throws IOException {
 		byte[] data = getData(text);
 		FileOutputStream out = new FileOutputStream(file);
@@ -30,6 +48,13 @@ public class GoogleTranslateTTS {
 		out.close();
 	}
 
+	/**
+	 * Get the raw data from the server
+	 * 
+	 * @param text
+	 * @return the audio raw data
+	 * @throws IOException
+	 */
 	public byte[] getData(String text) throws IOException {
 		InputStream in = getStream(text);
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -43,6 +68,14 @@ public class GoogleTranslateTTS {
 		return out.toByteArray();
 	}
 
+	/**
+	 * Make the HTTPS URL that needs to be called to get the audio file
+	 * 
+	 * @param text
+	 * @return the url
+	 * @throws MalformedURLException
+	 * @throws UnsupportedEncodingException
+	 */
 	public URL getUrl(String text) throws MalformedURLException, UnsupportedEncodingException {
 		return new URL("https://translate.google.com/translate_tts?ie=" + encoding + "&q="
 				+ URLEncoder.encode(text, encoding) + "&tl=" + language + "&client=" + client);
@@ -57,26 +90,54 @@ public class GoogleTranslateTTS {
 		return con.getInputStream();
 	}
 
+	/**
+	 * 
+	 * @return the encoding
+	 */
 	public String getEncoding() {
 		return encoding;
 	}
 
+	/**
+	 * Set the encoding to use. (Default UTF-8)
+	 * 
+	 * @param encoding
+	 */
 	public void setEncoding(String encoding) {
 		this.encoding = encoding;
 	}
 
+	/**
+	 * 
+	 * @return the language
+	 */
 	public String getLanguage() {
 		return language;
 	}
 
+	/**
+	 * Set the language to use.
+	 * 
+	 * @param language
+	 */
 	public void setLanguage(String language) {
 		this.language = language;
 	}
 
+	/**
+	 * 
+	 * @return the 'client'
+	 */
 	public String getClient() {
 		return client;
 	}
 
+	/**
+	 * The 'client' to set. I actually don't know what this is, but Google requires
+	 * it to be set to 'tw-ob' in order to work. Default: "tw-ob"
+	 * 
+	 * @param client
+	 */
 	public void setClient(String client) {
 		this.client = client;
 	}
