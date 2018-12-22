@@ -43,10 +43,13 @@ public class GoogleTranslateTTS {
 		return out.toByteArray();
 	}
 
+	public URL getUrl(String text) throws MalformedURLException, UnsupportedEncodingException {
+		return new URL("https://translate.google.com/translate_tts?ie=" + encoding + "&q="
+				+ URLEncoder.encode(text, encoding) + "&tl=" + language + "&client=" + client);
+	}
+
 	public InputStream getStream(String text) throws IOException {
-		HttpsURLConnection con = (HttpsURLConnection) new URL("https://translate.google.com/translate_tts?ie="
-				+ encoding + "&q=" + URLEncoder.encode(text, encoding) + "&tl=" + language + "&client=" + client)
-						.openConnection();
+		HttpsURLConnection con = (HttpsURLConnection) getUrl(text).openConnection();
 		con.setRequestMethod("GET");
 		con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; rv:25.0) Gecko/20100101 Firefox/25.0");
 		con.setReadTimeout(5000);
